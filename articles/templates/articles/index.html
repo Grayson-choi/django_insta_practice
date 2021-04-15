@@ -3,7 +3,7 @@
 {% block content %}
     <h1>index 페이지입니다.</h1>
     {% for article in articles %}
-    <p>{{ article }}</p>
+    <p><a href="{% url 'articles:detail' article.pk %}">{{ article }}</a></p>
     {% endfor %}
 {% endblock content %}
 
