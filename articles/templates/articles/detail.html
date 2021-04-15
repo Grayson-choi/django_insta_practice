@@ -5,4 +5,10 @@
 <p>{{article.title}}<p>
     <h1>내용</h1>
 <p>{{article.content}}</p>
+<form
+<form action="{% url 'articles:delete' article.pk %}" method="POST">
+{% csrf_token %}
+<button class="btn btn-danger">DELETE</button>
+</form>
+<a class="btn btn-primary" href="{% url 'articles:index' %}">index</a>
 {% endblock content %}

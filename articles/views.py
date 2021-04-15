@@ -30,3 +30,8 @@ def detail(request, pk):
         'article': article,
     }
     return render(request, 'articles/detail.html', context)
+
+def delete(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    article.delete()
+    return redirect('articles:index')
