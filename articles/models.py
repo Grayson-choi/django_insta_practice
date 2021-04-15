@@ -4,6 +4,7 @@ from django.db import models
 class Article(models.Model):
     title = models.CharField(max_length=20) # max_length는 필수 인자
     content = models.TextField()
+    image = models.ImageField(blank=True, upload_to='images/')
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 

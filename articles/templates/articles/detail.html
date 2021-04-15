@@ -2,10 +2,12 @@
 
 {% block content %}
     <h1>제목</h1>
-<p>{{article.title}}<p>
+<p>{{ article.title }}<p>
     <h1>내용</h1>
-<p>{{article.content}}</p>
-<form
+<p>{{ article.content }}</p>
+{% if article.image %}
+<img src="{{ article.image.url }}" alt="{{ article.image }}">
+{% endif %}
 <form action="{% url 'articles:delete' article.pk %}" method="POST">
 {% csrf_token %}
 <button class="btn btn-danger">DELETE</button>
