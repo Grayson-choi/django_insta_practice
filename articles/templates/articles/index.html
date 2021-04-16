@@ -5,7 +5,7 @@
     <img src="{% static 'articles/images/photo.jpg' %}">
     {% for article in articles %}
         {% if user.is_authenticated %}
-            <p><a href="{% url 'articles:detail' article.pk %}">{{ article }}</a> 작성자: {{ article.user }} </p>
+            <p><a href="{% url 'articles:detail' article.pk %}">{{ article }}</a> 작성자: <a href="{% url 'accounts:profile' article.user%}">{{ article.user }}</a> </p>
         {% endif %}
     {% endfor %}
 {% endblock content %}
