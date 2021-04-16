@@ -20,12 +20,16 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'articles:create' %}">create</a>
           </li>
+          <form action="{% url 'accounts:delete' %}" method="POST">
+          {% csrf_token %}
+          <input type="submit" value="회원 탈퇴">
+          </form>
         {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'accounts:login' %}">login</a>
           </li>
         {% endif %}
-
+        
       </ul>
     </div>
   </div>
