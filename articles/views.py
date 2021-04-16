@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods, require_POST
 from django.contrib.auth.decorators import login_required
 from .models import Article
-from .forms import ArticleForm
+from .forms import ArticleForm, CommentForm
 
 # Create your views here.
 def index(request):
@@ -31,8 +31,12 @@ def create(request):
 
 def detail(request, pk):
     article = get_object_or_404(Article, pk=pk)
+    comment_form = CommentForm()
+    comments = article.comment_set.all()
     context = {
         'article': article,
+        'comment_form': comment_form,
+        'comments': comments
     }
     return render(request, 'articles/detail.html', context)
 
@@ -65,4 +69,13 @@ def update(request, pk):
     
     return render(request, 'articles/update.html', context)
 
-        
+@require_POST
+def comments_create(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    comment_form = CommentForm(request.POST)
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.article = article
+        comment.user = request.user
+        comment.save()
+    return redirect('articles:detail', article.pk)
