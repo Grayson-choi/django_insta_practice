@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_http_methods, require_POST
 from django.contrib.auth.decorators import login_required
 from .models import Article
 from .forms import ArticleForm
@@ -35,25 +36,33 @@ def detail(request, pk):
     }
     return render(request, 'articles/detail.html', context)
 
-@login_required
+@require_POST
 def delete(request, pk):
-    article = get_object_or_404(Article, pk=pk)
-    article.delete()
-    return redirect('articles:index')
+    if request.user.is_authenticated:
+        article = get_object_or_404(Article, pk=pk)
+        if request.user == article.user:
+            article.delete()
+            return redirect('articles:index')
+    return redirect('articles:detail', articles.pk)
 
 @login_required
+@require_http_methods(['GET', 'POST'])
 def update(request, pk):
     article = Article.objects.get(pk=pk)
-    if request.method == 'POST':
-        form = ArticleForm(request.POST, request.FILES, instance=article)
-        if form.is_valid():
-            form.save()
-            return redirect('articles:detail', article.pk)
+    if request.user == article.user:
+        if request.method == 'POST':
+            form = ArticleForm(request.POST, request.FILES, instance=article)
+            if form.is_valid():
+                form.save()
+                return redirect('articles:detail', article.pk)
+        else:
+            form = ArticleForm(instance=article)
     else:
-        form = ArticleForm(instance=article)
+        return redirect('articles:index')
     context = {
         'form': form
     }
+    
     return render(request, 'articles/update.html', context)
 
         

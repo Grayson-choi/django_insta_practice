@@ -8,11 +8,14 @@
 {% if article.image %}
 <img src="{{ article.image.url }}" alt="{{ article.image }}">
 {% endif %}
+
+{% if request.user == article.user %}
 <form action="{% url 'articles:delete' article.pk %}" method="POST">
 {% csrf_token %}
 <button class="btn btn-danger">DELETE</button>
 </form>
-
-<a class="btn btn-primary" href="{% url 'articles:index' %}">index</a>
 <a class="btn btn-info" href="{% url 'articles:update' article.pk %}">update</a>
+{% endif %}
+<a class="btn btn-primary" href="{% url 'articles:index' %}">index</a>
+
 {% endblock content %}
