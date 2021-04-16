@@ -30,8 +30,19 @@
     <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인 해주세요.]</a>
   {% endif %}
     <hr>
+    <ul>
     {% for comment in comments %}
-    <p>{{comment}}</p>
+        <li>
+            {{comment}}:{{comment.user}} 
+            {% if request.user == comment.user %}
+            <form action="{% url 'articles:comments_delete' article.pk comment.pk %}" method="POST" class="d-inline">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-danger" value="삭제">
+            {% endif %}
+            </form>
+        </li>
+    </ul>
+
     {% endfor %}
 
 
