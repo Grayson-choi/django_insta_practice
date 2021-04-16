@@ -1,7 +1,21 @@
 {% extends 'base.html' %}
 
+
 {% block content %}
 <h1>{{person.username}}님의 프로필</h1>
+<h1>팔로잉: {{person.followings.all|length}}</h1>
+<h1>팔로워: {{person.followers.all|length}}</h1>
+<form action="{% url 'accounts:follow' person.pk %}" method="POST">
+    {% csrf_token %}
+    {% if request.user in person.followers.all %}
+        <button>UnFollow</button>
+    {% else %}
+        <button>Follow</button>
+    {% endif %}
+</form>
+
+<hr>
+
 <hr>
 <h2>{{ person.username }}'s 게시글<h2>
 {% for article in person.article_set.all %}
