@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods, require_POST
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+
 from .models import Article, Comment
 from .forms import ArticleForm, CommentForm
 
@@ -88,12 +90,18 @@ def comments_delete(request, article_pk, comment_pk):
             comment.delete()
     return redirect('articles:detail', article_pk)
 
-def likes(request, article_pk):
+def like(request, article_pk):
     if request.user.is_authenticated:
         article = get_object_or_404(Article, pk=article_pk)
         if article.like_users.filter(pk=request.user.pk).exists():
             article.like_users.remove(request.user)
+            liked = False
         else:
             article.like_users.add(request.user)
-        return redirect('articles:detail', article_pk)
+            liked = True
+        like_status = {
+            'liked': liked,
+            'count': article.like_users.count(),
+        }
+        return JsonResponse(like_status)
     return redirect('accounts:login')
